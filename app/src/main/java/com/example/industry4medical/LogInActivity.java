@@ -6,12 +6,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.industry4medical.databinding.ActivityLogiInBinding;
+import com.example.industry4medical.model.API.AbstractAPIListener;
+import com.example.industry4medical.model.Model;
+import com.example.industry4medical.model.User;
 
-public class LogiInActivity extends Activity {
+public class LogInActivity extends Activity {
 
     private ActivityLogiInBinding binding;
     private EditText emailTxt, passTxt;
@@ -28,25 +29,28 @@ public class LogiInActivity extends Activity {
         emailTxt = (EditText) findViewById(R.id.emailTextInput);
         passTxt = (EditText) findViewById(R.id.passwordTextInput);
         Button logInBtn = (Button) findViewById(R.id.loginBtn);
-        logInBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logInBtnAction();
-            }
-        });
-        Button backToMainBtn = (Button) findViewById(R.id.backToMainBtn);
+        logInBtn.setOnClickListener(v -> logInBtnAction());
+        /*Button backToMainBtn = (Button) findViewById(R.id.backToMainBtn);
         backToMainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
-        });
+        });*/
     }
     private void logInBtnAction(){
         String email = emailTxt.getText().toString();
         String password = passTxt.getText().toString();
 
-        Toast.makeText(this, "Email: " + email + " Password: " + password,
-                Toast.LENGTH_LONG).show();
+        final Model model = Model.getInstance(LogInActivity.this.getApplication());
+        model.login(email, password, new AbstractAPIListener() {
+            @Override
+            public void onLogin(User user) {
+                if (user != null) {
+                    model.setUser(user);
+                    startActivity(new Intent(LogInActivity.this, GetSleepDataActivity.class));
+                }
+            }
+        });
     }
 }

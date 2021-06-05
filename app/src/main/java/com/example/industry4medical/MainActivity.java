@@ -35,12 +35,8 @@ public class MainActivity extends Activity {
 
     private void configureGoToAppButton() {
         Button goToAppBtn = (Button) findViewById(R.id.goToAppBtn);
-        goToAppBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, LogiInActivity.class));
-            }
-        });
+        goToAppBtn.setOnClickListener(v -> startActivity(new Intent(MainActivity.this,
+                LogInActivity.class)));
     }
     public void checkPermission(String permission, int requestCode)
     {

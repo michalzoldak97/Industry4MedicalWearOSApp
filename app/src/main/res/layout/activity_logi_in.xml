@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/box_inset_layout_padding"
-    tools:context=".LogiInActivity"
+    tools:context=".LogInActivity"
     tools:deviceIds="wear">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -57,16 +57,16 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.333" />
 
-        <Button
-            android:id="@+id/backToMainBtn"
-            android:layout_width="31dp"
-            android:layout_height="41dp"
-            android:layout_marginStart="1dp"
-            android:layout_marginBottom="1dp"
-            android:text="@string/lt"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+<!--        <Button-->
+<!--            android:id="@+id/backToMainBtn"-->
+<!--            android:layout_width="31dp"-->
+<!--            android:layout_height="41dp"-->
+<!--            android:layout_marginStart="1dp"-->
+<!--            android:layout_marginBottom="1dp"-->
+<!--            android:text="@string/lt"-->
+<!--            android:textAppearance="@style/TextAppearance.AppCompat.Body1"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent" />-->
 
         <Button
             android:id="@+id/loginBtn"
@@ -76,8 +76,8 @@
             android:text="@string/login"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.238"
-            app:layout_constraintStart_toEndOf="@+id/backToMainBtn"
+            app:layout_constraintHorizontal_bias="0.494"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/passwordTextInput"
             app:layout_constraintVertical_bias="0.466" />
 

@@ -13,4 +13,8 @@
     <string name="go_to_app">Go to App</string>
     <string name="lt"><![CDATA[<]]></string>
     <string name="login">Login</string>
+    <string name="title_activity_get_sleep_data">GetSleepDataActivity</string>
+    <string name="recording">Recording…</string>
+    <string name="acc">ACC</string>
+    <string name="hr">HR</string>
 </resources>
