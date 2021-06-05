@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Industry4Medical</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
+    <string name="title_activity_logi_in">LogiInActivity</string>
+    <string name="log_in_to_your_account">Log in to your account</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="i4m">I4M</string>
+    <string name="go_to_app">Go to App</string>
+    <string name="lt"><![CDATA[<]]></string>
+    <string name="login">Login</string>
+</resources>
