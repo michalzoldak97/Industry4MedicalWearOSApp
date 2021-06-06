@@ -3,18 +3,22 @@ package com.example.industry4medical.model.API;
 import android.app.Application;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.industry4medical.model.Model;
 import com.example.industry4medical.model.User;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,24 +75,16 @@ public class WebAPI implements API{
     }
 
     @Override
-    public void sendSleepData(JSONObject sleepData, APIListener listener) {
-       String url = BASE_URL + "api/sendSleepData";
+    public void sendSleepData(JSONArray sleepData, APIListener listener) {
+        String url = BASE_URL + "api/sendSleepData";
 
-        Response.Listener<JSONObject> successListener = new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                if(listener != null){
-                    listener.onPackageSent(response);
-                }
+        Response.Listener<JSONArray> successListener = response -> {
+            if(listener != null){
+                listener.onPackageSent();
             }
         };
-        Response.ErrorListener errorListener = new Response.ErrorListener(){
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(mApplication, "Send Error response", Toast.LENGTH_LONG).show();
-            }
-        };
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, sleepData,
+        Response.ErrorListener errorListener = error -> Toast.makeText(mApplication, "Send Error response", Toast.LENGTH_LONG).show();
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url, sleepData,
                 successListener, errorListener) {
             @Override
             public Map<String, String> getHeaders() {
@@ -99,6 +95,7 @@ public class WebAPI implements API{
                 return headers;
             }
         };
+        System.out.println(sleepData);
         mRequestQueue.add(request);
     }
 

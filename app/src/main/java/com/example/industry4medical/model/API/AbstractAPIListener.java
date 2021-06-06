@@ -11,7 +11,7 @@ public class AbstractAPIListener implements APIListener{
     }
 
     @Override
-    public void onPackageSent(JSONObject response) {
+    public void onPackageSent() {
 
     }
 }

@@ -6,5 +6,5 @@ import org.json.JSONObject;
 
 public interface APIListener {
     void onLogin(User user);
-    void onPackageSent(JSONObject response);
+    void onPackageSent();
 }

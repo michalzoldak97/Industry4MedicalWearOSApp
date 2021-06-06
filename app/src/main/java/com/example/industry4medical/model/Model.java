@@ -7,6 +7,7 @@ import com.example.industry4medical.model.API.APIListener;
 import com.example.industry4medical.model.API.AbstractAPIListener;
 import com.example.industry4medical.model.API.WebAPI;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Model {
@@ -34,7 +35,7 @@ public class Model {
     public void login(String email, String password, APIListener listener){
         mApi.login(email, password, listener);
     }
-    public void sendData(JSONObject sleepData, APIListener listener){
+    public void sendData(JSONArray sleepData, APIListener listener){
         mApi.sendSleepData(sleepData, listener);
     }
 }

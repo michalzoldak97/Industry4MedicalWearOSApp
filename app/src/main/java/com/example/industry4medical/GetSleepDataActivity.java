@@ -2,6 +2,7 @@ package com.example.industry4medical;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -10,8 +11,15 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.example.industry4medical.databinding.ActivityGetSleepDataBinding;
+import com.example.industry4medical.model.API.AbstractAPIListener;
+import com.example.industry4medical.model.DataContainerType;
 import com.example.industry4medical.model.Model;
 import com.example.industry4medical.model.SleepDataContainer;
+import com.example.industry4medical.model.User;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -19,7 +27,7 @@ import java.util.List;
 
 public class GetSleepDataActivity extends Activity implements SensorEventListener {
 
-    private static final int MAX_DATA_CONTAINER_LEN = 1024;
+    private static final int MAX_DATA_CONTAINER_LEN = 124;
 
     private TextView accText, hrText;
     private ActivityGetSleepDataBinding binding;
@@ -42,8 +50,8 @@ public class GetSleepDataActivity extends Activity implements SensorEventListene
         configViewComponents();
     }
     private void configViewComponents(){
-        accText =  (TextView) findViewById(R.id.accText);
-        hrText =  (TextView) findViewById(R.id.hrText);
+        accText = findViewById(R.id.accText);
+        hrText = findViewById(R.id.hrText);
     }
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -60,20 +68,56 @@ public class GetSleepDataActivity extends Activity implements SensorEventListene
         List<Float> currSData = new ArrayList<>();
         currSData.add(event.values[0]);
         SleepDataContainer sample = new SleepDataContainer(currTime, currSData);
-        passHRDataToContainer(sample);
-        System.out.println(sample.getSampleTime() + " " + sample.getSensorData());
+        passDataToContainer(sample, DataContainerType.HEART_RATE);
+        //System.out.println(sample.getSampleTime() + " " + sample.getSensorData());
     }
-
-    private void passHRDataToContainer(SleepDataContainer dataSample){
-        if(hrDataContainer.size() < MAX_DATA_CONTAINER_LEN){
-            hrDataContainer.add(dataSample);
-        }else{
-            sendHRDataToAPI();
-            hrDataContainer.clear();
+    private void passDataToContainer(SleepDataContainer dataSample, DataContainerType dType){
+        switch (dType) {
+            case HEART_RATE:
+                if (hrDataContainer.size() < MAX_DATA_CONTAINER_LEN) {
+                    hrDataContainer.add(dataSample);
+                } else {
+                    sendHRDataToAPI();
+                    hrDataContainer.clear();
+                }
+                break;
+            case ACCELERATION:
+                if (accDataContainer.size() < MAX_DATA_CONTAINER_LEN) {
+                    accDataContainer.add(dataSample);
+                } else {
+                    sendACCDataToAPI();
+                    accDataContainer.clear();
+                }
+                break;
         }
     }
 
     private void sendHRDataToAPI() {
+        //JSONObject finalJsonObj = new JSONObject();
+        JSONArray finalJsonObj = new JSONArray();
+        try{
+            //finalJsonObj.put("DataType", "HR");
+            JSONObject bodyHead = new JSONObject();
+            bodyHead.put("DataType", "HR");
+            finalJsonObj.put(bodyHead);
+            for (SleepDataContainer dataContainer : hrDataContainer){
+                JSONObject dataSampleObj = new JSONObject();
+                dataSampleObj.put(dataContainer.getSampleTime(), dataContainer.getSensorData());
+                finalJsonObj.put(dataSampleObj);
+            }
+            final Model model = Model.getInstance(GetSleepDataActivity.this.getApplication());
+            model.sendData(finalJsonObj, new AbstractAPIListener() {
+                @Override
+                public void onPackageSent() {
+                    System.out.println("On response actions");
+                }
+            });
+        }catch (JSONException e){
+            System.out.println("sendHRDataToAPI JSON exception");
+        }
+    }
+
+    private void sendACCDataToAPI() {
 
         final Model model = Model.getInstance(GetSleepDataActivity.this.getApplication());
     }
