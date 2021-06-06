@@ -27,7 +27,7 @@ import java.util.List;
 
 public class GetSleepDataActivity extends Activity implements SensorEventListener {
 
-    private static final int MAX_DATA_CONTAINER_LEN = 124;
+    private static final int MAX_DATA_CONTAINER_LEN = 1024;
 
     private TextView accText, hrText;
     private ActivityGetSleepDataBinding binding;

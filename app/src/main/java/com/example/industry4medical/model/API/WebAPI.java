@@ -95,6 +95,11 @@ public class WebAPI implements API{
                 return headers;
             }
         };
+        try {
+            System.out.println(request.getHeaders());
+        } catch (AuthFailureError authFailureError) {
+            authFailureError.printStackTrace();
+        }
         System.out.println(sleepData);
         mRequestQueue.add(request);
     }
