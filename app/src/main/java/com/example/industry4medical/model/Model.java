@@ -35,7 +35,7 @@ public class Model {
     public void login(String email, String password, APIListener listener){
         mApi.login(email, password, listener);
     }
-    public void sendData(JSONArray sleepData, APIListener listener){
+    public void sendData(JSONObject sleepData, APIListener listener){
         mApi.sendSleepData(sleepData, listener);
     }
 }
