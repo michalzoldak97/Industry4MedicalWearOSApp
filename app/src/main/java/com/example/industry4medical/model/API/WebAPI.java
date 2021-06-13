@@ -75,16 +75,16 @@ public class WebAPI implements API{
     }
 
     @Override
-    public void sendSleepData(JSONArray sleepData, APIListener listener) {
+    public void sendSleepData(JSONObject sleepData, APIListener listener) {
         String url = BASE_URL + "api/sendSleepData";
 
-        Response.Listener<JSONArray> successListener = response -> {
+        Response.Listener<JSONObject> successListener = response -> {
             if(listener != null){
                 listener.onPackageSent();
             }
         };
         Response.ErrorListener errorListener = error -> Toast.makeText(mApplication, "Send Error response", Toast.LENGTH_LONG).show();
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url, sleepData,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, sleepData,
                 successListener, errorListener) {
             @Override
             public Map<String, String> getHeaders() {

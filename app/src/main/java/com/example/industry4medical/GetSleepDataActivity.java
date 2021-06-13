@@ -27,7 +27,7 @@ import java.util.List;
 
 public class GetSleepDataActivity extends Activity implements SensorEventListener {
 
-    private static final int MAX_DATA_CONTAINER_LEN = 1024;
+    private static final int MAX_DATA_CONTAINER_LEN = 128;
 
     private TextView accText, hrText;
     private ActivityGetSleepDataBinding binding;
@@ -123,15 +123,11 @@ public class GetSleepDataActivity extends Activity implements SensorEventListene
                 dataType = "ACC";
                 dataToPass = accDataContainer;
         }
-        JSONArray finalJsonObj = new JSONArray();
+        JSONObject finalJsonObj = new JSONObject();
         try{
-            JSONObject bodyHead = new JSONObject();
-            bodyHead.put("DataType", dataType);
-            finalJsonObj.put(bodyHead);
-            for (SleepDataContainer dataContainer : dataToPass){
-                JSONObject dataSampleObj = new JSONObject();
-                dataSampleObj.put(dataContainer.getSampleTime(), dataContainer.getSensorData());
-                finalJsonObj.put(dataSampleObj);
+            finalJsonObj.put("DataType", dataType);
+            for(SleepDataContainer dataContainer : dataToPass){
+                finalJsonObj.put(dataContainer.getSampleTime().toString(), dataContainer.getSensorData().toString());
             }
             final Model model = Model.getInstance(GetSleepDataActivity.this.getApplication());
             model.sendData(finalJsonObj, new AbstractAPIListener() {
