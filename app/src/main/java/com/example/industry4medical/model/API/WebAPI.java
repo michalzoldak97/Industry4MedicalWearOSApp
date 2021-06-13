@@ -25,7 +25,7 @@ import java.util.Map;
 
 public class WebAPI implements API{
 
-    public static final String BASE_URL = "http://77.55.208.10:8081";
+    public static final String BASE_URL = "http://dummy/";
 
     private final Application mApplication;
     private final Model mModel;
@@ -75,16 +75,16 @@ public class WebAPI implements API{
     }
 
     @Override
-    public void sendSleepData(JSONArray sleepData, APIListener listener) {
-        String url = BASE_URL + "/smartwatchdata";
+    public void sendSleepData(JSONObject sleepData, APIListener listener) {
+        String url = BASE_URL + "api/sendSleepData";
 
-        Response.Listener<JSONArray> successListener = response -> {
+        Response.Listener<JSONObject> successListener = response -> {
             if(listener != null){
                 listener.onPackageSent();
             }
         };
         Response.ErrorListener errorListener = error -> Toast.makeText(mApplication, "Send Error response", Toast.LENGTH_LONG).show();
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url, sleepData,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, sleepData,
                 successListener, errorListener) {
             @Override
             public Map<String, String> getHeaders() {
@@ -107,8 +107,8 @@ public class WebAPI implements API{
     private void testSuccessfulLoginScenario(APIListener listener){
         try {
             JSONObject testData = new JSONObject();
-            testData.put("name", "jrocket@example.com");
-            testData.put("token", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE2MjM1ODIyOTIsImV4cCI6MTY1NTExODI5MiwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsInVzZXJJRCI6IjEifQ.yAem0cQhijdY9HvXBczLyEp8P5erPvfKYgL5Cn8x0_k");
+            testData.put("name", "test@test.com");
+            testData.put("token", "123secretToken123");
             User user = User.getUser(testData);
             listener.onLogin(user);
         }catch (JSONException e){
