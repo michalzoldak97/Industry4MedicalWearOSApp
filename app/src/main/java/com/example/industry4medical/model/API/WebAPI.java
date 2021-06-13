@@ -25,7 +25,7 @@ import java.util.Map;
 
 public class WebAPI implements API{
 
-    public static final String BASE_URL = "http://dummy/";
+    public static final String BASE_URL = "http://77.55.208.10:8081";
 
     private final Application mApplication;
     private final Model mModel;
@@ -76,7 +76,7 @@ public class WebAPI implements API{
 
     @Override
     public void sendSleepData(JSONArray sleepData, APIListener listener) {
-        String url = BASE_URL + "api/sendSleepData";
+        String url = BASE_URL + "/smartwatchdata";
 
         Response.Listener<JSONArray> successListener = response -> {
             if(listener != null){
@@ -107,8 +107,8 @@ public class WebAPI implements API{
     private void testSuccessfulLoginScenario(APIListener listener){
         try {
             JSONObject testData = new JSONObject();
-            testData.put("name", "test@test.com");
-            testData.put("token", "123secretToken123");
+            testData.put("name", "jrocket@example.com");
+            testData.put("token", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE2MjM1ODIyOTIsImV4cCI6MTY1NTExODI5MiwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsInVzZXJJRCI6IjEifQ.yAem0cQhijdY9HvXBczLyEp8P5erPvfKYgL5Cn8x0_k");
             User user = User.getUser(testData);
             listener.onLogin(user);
         }catch (JSONException e){
