@@ -8,17 +8,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class User {
-    public static User getUser(JSONObject jsonObject) throws JSONException{
-        String email = jsonObject.getString("name");
-        String webToken = jsonObject.getString("token");
-
-        return new User(email, webToken);
+    public static User getUser(JSONObject jsonObject) {
+        try{
+        String webToken = jsonObject.getString("jwt");
+        return new User(webToken);} catch(JSONException e){
+            System.out.println("JSON error: " + jsonObject);
+            return null;
+        }
     }
 
     private String email, webToken;
 
-    public User(String email, String webToken){
-        this.email = email;
+    public User(String webToken){
         this.webToken = webToken;
     }
 
