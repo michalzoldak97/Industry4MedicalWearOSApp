@@ -25,7 +25,7 @@ import java.util.Map;
 
 public class WebAPI implements API{
 
-    public static final String BASE_URL = "http://77.55.208.10";
+    public static final String BASE_URL = "http://192.168.1.17";
 
     private final Application mApplication;
     private final Model mModel;
@@ -39,7 +39,7 @@ public class WebAPI implements API{
 
     public void login(String email, String password, final APIListener listener){
 
-        String url = BASE_URL + ":8082/login";
+        String url = BASE_URL + ":8092/login";
 
         JSONObject jsonObject = new JSONObject();
         try {
@@ -73,7 +73,7 @@ public class WebAPI implements API{
 
     @Override
     public void sendSleepData(JSONObject sleepData, APIListener listener) {
-        String url = BASE_URL + ":8081/smartwatchdata";
+        String url = BASE_URL + ":8091/smartwatchdata";
 
         Response.Listener<JSONObject> successListener = response -> {
             if(listener != null){

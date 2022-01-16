@@ -12,7 +12,7 @@
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFEBEE"
+        android:background="#656262"
         app:layout_boxedEdges="all">
 
         <EditText
@@ -57,22 +57,22 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.333" />
 
-<!--        <Button-->
-<!--            android:id="@+id/backToMainBtn"-->
-<!--            android:layout_width="31dp"-->
-<!--            android:layout_height="41dp"-->
-<!--            android:layout_marginStart="1dp"-->
-<!--            android:layout_marginBottom="1dp"-->
-<!--            android:text="@string/lt"-->
-<!--            android:textAppearance="@style/TextAppearance.AppCompat.Body1"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent" />-->
+        <!--        <Button-->
+        <!--            android:id="@+id/backToMainBtn"-->
+        <!--            android:layout_width="31dp"-->
+        <!--            android:layout_height="41dp"-->
+        <!--            android:layout_marginStart="1dp"-->
+        <!--            android:layout_marginBottom="1dp"-->
+        <!--            android:text="@string/lt"-->
+        <!--            android:textAppearance="@style/TextAppearance.AppCompat.Body1"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent" />-->
 
         <Button
             android:id="@+id/loginBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#1E88E5"
+            android:background="#0091EA"
             android:text="@string/login"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

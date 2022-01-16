@@ -10,7 +10,7 @@ import org.json.JSONObject;
 public class User {
     public static User getUser(JSONObject jsonObject) {
         try{
-        String webToken = jsonObject.getString("jwt");
+        String webToken = jsonObject.getString("token");
         return new User(webToken);} catch(JSONException e){
             System.out.println("JSON error: " + jsonObject);
             return null;

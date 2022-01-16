@@ -12,7 +12,7 @@
         android:id="@+id/frameLayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFEBEE"
+        android:background="#656262"
         app:layout_boxedEdges="all">
 
         <TextView
@@ -25,7 +25,7 @@
             android:layout_marginBottom="148dp"
             android:shadowColor="#64B5F6"
             android:text="@string/i4m"
-            android:textColor="#304FFE"
+            android:textColor="#E8EAF6"
             android:textSize="34sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

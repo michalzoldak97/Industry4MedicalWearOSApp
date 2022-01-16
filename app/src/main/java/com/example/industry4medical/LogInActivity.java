@@ -48,7 +48,7 @@ public class LogInActivity extends Activity {
             public void onLogin(User user) {
                 if (user != null) {
                     model.setUser(user);
-                    startActivity(new Intent(LogInActivity.this, GetSleepDataActivity.class));
+                    startActivity(new Intent(LogInActivity.this, MenuActivity.class));
                 }
             }
         });
