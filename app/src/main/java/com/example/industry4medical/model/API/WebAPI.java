@@ -97,7 +97,7 @@ public class WebAPI implements API{
         } catch (AuthFailureError authFailureError) {
             authFailureError.printStackTrace();
         }
-        System.out.println(sleepData);
+        System.out.println("Sleep data: " + sleepData);
         mRequestQueue.add(request);
     }
 

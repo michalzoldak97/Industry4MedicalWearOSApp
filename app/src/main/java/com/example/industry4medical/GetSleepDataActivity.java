@@ -13,16 +13,18 @@ import com.example.industry4medical.databinding.ActivityGetSleepDataBinding;
 import com.example.industry4medical.model.API.AbstractAPIListener;
 import com.example.industry4medical.model.SensorType;
 import com.example.industry4medical.model.Model;
-import com.example.industry4medical.model.SleepDataContainer;
+import com.example.industry4medical.model.SleepDataSample;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Array;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class GetSleepDataActivity extends Activity implements SensorEventListener {
@@ -35,10 +37,10 @@ public class GetSleepDataActivity extends Activity implements SensorEventListene
     private SensorManager mySensorManager;
     private Sensor accSensor, hrSensor;
 
-    private List<SleepDataContainer> hrDataContainer = new ArrayList<>();
-    private List<SleepDataContainer> accDataContainer = new ArrayList<>();
+    private final List<SleepDataSample> sleepDataSamples = new ArrayList<>();
 
     private float[] previousAccState = new float[3];
+    private String previousSecond = getCurrentTimeInSec();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,14 +57,13 @@ public class GetSleepDataActivity extends Activity implements SensorEventListene
         accText = findViewById(R.id.accText);
         hrText = findViewById(R.id.hrText);
     }
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        if(event.sensor == hrSensor) {
-            sensorActions(event, SensorType.HEART_RATE);
-        }else if(event.sensor == accSensor && validateAccSensor(event)) {
-            sensorActions(event, SensorType.ACCELERATION);
-        }
+
+    private String getCurrentTimeInSec(){
+        String timeNow = (new Timestamp(System.currentTimeMillis())).toString();
+        String[] splitDate = timeNow.split("\\.");
+        return splitDate[0];
     }
+
     private boolean validateAccSensor(SensorEvent event){
         if(Arrays.equals(event.values, previousAccState)){
             return false;
@@ -71,66 +72,95 @@ public class GetSleepDataActivity extends Activity implements SensorEventListene
             return true;
         }
     }
+    private static double round(double value) {
+        BigDecimal bd = new BigDecimal(Double.toString(value));
+        bd = bd.setScale(2, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    private String calcVectorMagnitude(List<Float> sensorData){
+        double powSum = 0;
+        for (Float var : sensorData){
+            powSum += Math.pow(var, 2);
+        }
+        return String.valueOf(round(Math.sqrt(powSum)));
+    }
+
+    private SleepDataSample calcDataSample(
+            String currTime
+            ,List<Float> sensorData
+            ,SensorType sensorType){
+        ArrayList<String> parsedSensorData = new ArrayList<>();
+        switch (sensorType) {
+            case ACCELERATION:
+                parsedSensorData.add(hrText.getText().toString());
+                parsedSensorData.add(calcVectorMagnitude(sensorData));
+                break;
+            case HEART_RATE:
+                parsedSensorData.add(String.valueOf(Math.round(sensorData.get(0))));
+                parsedSensorData.add(accText.getText().toString());
+        }
+        return new SleepDataSample(currTime, parsedSensorData);
+    }
+
+    private void appendSleepData(SleepDataSample sleepDataSample){
+        if (sleepDataSamples.size() < MAX_DATA_CONTAINER_LEN){
+            sleepDataSamples.add(sleepDataSample);
+        } else {
+            sendDataToAPI();
+            sleepDataSamples.clear();
+        }
+    }
 
     private void sensorActions(SensorEvent event, SensorType sensorType){
-        String currTime = (new Timestamp(System.currentTimeMillis())).toString();
+        String currTime = getCurrentTimeInSec();
+        if (currTime.equals(previousSecond)){
+            return;
+        }
+        else {
+            previousSecond = currTime;
+        }
         List<Float> currSData = new ArrayList<>();
         for(Float eventVal : event.values) {
             currSData.add(eventVal);
         }
-        SleepDataContainer sample = new SleepDataContainer(currTime, currSData);
-        passDataToContainer(sample, sensorType);
+        SleepDataSample sleepDataSample = calcDataSample(currTime, currSData, sensorType);
+        System.out.println("Sleep sample -> Time: " + sleepDataSample.getSampleTimestamp() + " HR: "
+                + sleepDataSample.getHrVmDataSample().getHeartRate() + " ACC: " +
+                sleepDataSample.getHrVmDataSample().getVectorMagnitude());
+
+        appendSleepData(sleepDataSample);
 
         switch (sensorType){
-            case HEART_RATE: hrText.setText(String.format("%s",currSData.get(0)));
+            case HEART_RATE: hrText.setText(String.format("%s",sleepDataSample.getHrVmDataSample()
+                    .getHeartRate()));
                 break;
-            case ACCELERATION: accText.setText(String.format("%s %s %s",currSData.get(0),
-                    currSData.get(1), currSData.get(2)));
+            case ACCELERATION: accText.setText(String.format("%s",sleepDataSample.getHrVmDataSample()
+                    .getVectorMagnitude()));
                 break;
         }
     }
-    private void passDataToContainer(SleepDataContainer dataSample, SensorType sensorType){
-        switch (sensorType) {
-            case HEART_RATE:
-                if (hrDataContainer.size() < MAX_DATA_CONTAINER_LEN) {
-                    hrDataContainer.add(dataSample);
-                } else {
-                    sendDataToAPI(sensorType);
-                    hrDataContainer.clear();
-                }
-                break;
-            case ACCELERATION:
-                if (accDataContainer.size() < MAX_DATA_CONTAINER_LEN) {
-                    accDataContainer.add(dataSample);
-                } else {
-                    sendDataToAPI(sensorType);
-                    accDataContainer.clear();
-                }
-                break;
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if(event.sensor == hrSensor) {
+            sensorActions(event, SensorType.HEART_RATE);
+        }else if(event.sensor == accSensor && validateAccSensor(event)) {
+            sensorActions(event, SensorType.ACCELERATION);
         }
-        System.out.println("HR: " + hrDataContainer.size() + "\nACC " + accDataContainer.size());
     }
 
-    private void sendDataToAPI(SensorType sensorType) {
-        String dataType = "";
-        List<SleepDataContainer> dataToPass = new ArrayList<>();
-        switch (sensorType){
-            case HEART_RATE:
-                dataType = "HR";
-                dataToPass = hrDataContainer;
-                break;
-            case ACCELERATION:
-                dataType = "ACC";
-                dataToPass = accDataContainer;
-        }
-        JSONObject finalJsonObj = new JSONObject();
+    private void sendDataToAPI() {
+        JSONObject objToSend = new JSONObject();
         try{
-            finalJsonObj.put("DataType", dataType);
-            for(SleepDataContainer dataContainer : dataToPass){
-                finalJsonObj.put(dataContainer.getSampleTime().toString(), dataContainer.getSensorData().toString());
+            for(SleepDataSample sleepDataSample : sleepDataSamples){
+                JSONObject sensorData = new JSONObject();
+                sensorData.put("HR", sleepDataSample.getHrVmDataSample().getHeartRate());
+                sensorData.put("VM", sleepDataSample.getHrVmDataSample().getVectorMagnitude());
+                objToSend.put(sleepDataSample.getSampleTimestamp(), sensorData);
             }
             final Model model = Model.getInstance(GetSleepDataActivity.this.getApplication());
-            model.sendData(finalJsonObj, new AbstractAPIListener() {
+            model.sendData(objToSend, new AbstractAPIListener() {
                 @Override
                 public void onPackageSent() {
                     System.out.println("On response actions");
@@ -140,17 +170,6 @@ public class GetSleepDataActivity extends Activity implements SensorEventListene
             System.out.println("sendHRDataToAPI JSON exception");
         }
     }
-
-    private void sendACCDataToAPI() {
-
-        final Model model = Model.getInstance(GetSleepDataActivity.this.getApplication());
-    }
-
-    private void accSensorActions(SensorEvent event){
-        accText.setText(String.format("%s %s %s", event.values[0],
-                event.values[1], event.values[2]));
-    }
-
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
