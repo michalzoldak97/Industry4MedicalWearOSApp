@@ -23,13 +23,11 @@ import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class GetSleepDataActivity extends Activity implements SensorEventListener {
 
-    private static final int MAX_DATA_CONTAINER_LEN = 24;
+    private static final int MAX_DATA_CONTAINER_LEN = 10;
 
     private TextView accText, hrText;
     private ActivityGetSleepDataBinding binding;

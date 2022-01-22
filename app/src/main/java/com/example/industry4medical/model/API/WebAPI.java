@@ -56,8 +56,6 @@ public class WebAPI implements API{
             Response.ErrorListener errorListener = error -> {
                 Toast.makeText(mApplication, "Error: Invalid user credentials" /*+ error.toString()*/, Toast.LENGTH_LONG).show();
 
-                //testSuccessfulLoginScenario(listener);
-
             };
 
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject,
@@ -92,27 +90,7 @@ public class WebAPI implements API{
                 return headers;
             }
         };
-        try {
-            System.out.println(request.getHeaders());
-        } catch (AuthFailureError authFailureError) {
-            authFailureError.printStackTrace();
-        }
         System.out.println("Sleep data: " + sleepData);
         mRequestQueue.add(request);
     }
-
-    /*private void testSuccessfulLoginScenario(APIListener listener){
-        try {
-            JSONObject testData = new JSONObject();
-            //testData.put("name", "jrocket@example.com");
-            testData.put("token", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE2MjM1ODIyOTIsImV4cCI6MTY1NTExODI5MiwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsInVzZXJJRCI6IjEifQ.yAem0cQhijdY9HvXBczLyEp8P5erPvfKYgL5Cn8x0_k");
-            User user = User.getUser(testData);
-            listener.onLogin(user);
-        }catch (JSONException e){
-            Toast.makeText(mApplication, "JSON exception"+ e.toString(),Toast.LENGTH_LONG).show();
-        }
-    }*/
-
 }
-
-//need add data to send data
